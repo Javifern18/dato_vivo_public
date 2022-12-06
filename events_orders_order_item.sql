@@ -183,23 +183,13 @@ select
 
 set delivered_at = (select DATEADD(day,normal(5,2,random()),$created_at));
 
-insert into DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.ORDERS
-select 
-    $order_id as order_id,
-    $shipping_service as shipping_service, 
-    $shipping_cost as shipping_cost,
-    $address_id as address_id, 
-    TIMEADD(min,2,$created_at) as created_at,     
-    $promo_id as promo_id,   
-    $estimated_delivery_at as estimated_delivery_at, 
-    $order_cost as order_cost, 
-    $user_id as user_id, 
-    order_cost + shipping_cost as order_total,
-    $delivered_at as delivered_at,
-    $tracking_id as tracking_id,
-    'delivered' as status,
-    null as _fivetran_deleted,
-    current_timestamp() as _fivetran_synced;
+update DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.ORDERS
+    set
+        delivered_at = $delivered_at,
+        status = 'delivered',
+        _fivetran_synced = current_timestamp()
+    where order_id = $order_id;
+
 
 select $order_id as NK_order_id;
 
