@@ -14,12 +14,11 @@ create or replace temporary table DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.temp_pro
 );
 
 LET num_products NUMBER := (select max(row_number) from DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.temp_products_price);
-LET product_id VARCHAR := null;
 
 begin
   for i in 1 to :num_products do
   
-  set product_id = (select :product_id from DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.temp_products_price where row_number=:i);
+  let product_id varchar := (select product_id from DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.temp_products_price where row_number=:i);
   
   update DEV_BRONZE_DB_ALUMNO18.SQL_SERVER_DBO.PRODUCTS
     set
